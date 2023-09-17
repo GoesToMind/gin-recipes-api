@@ -34,46 +34,67 @@
         }
       },
       "post": {
-        "description": "Create an new recipe",
+        "description": "Create a new recipe",
         "produces": [
           "application/json"
         ],
         "tags": [
           "recipes"
         ],
-        "operationId": "createRecipe",
+        "operationId": "newRecipe",
+        "parameters": [
+          {
+            "x-go-name": "ID",
+            "name": "id",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "x-go-name": "Name",
+            "name": "name",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "x-go-name": "Tags",
+            "name": "tags",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "x-go-name": "Ingredients",
+            "name": "ingredients",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "x-go-name": "Instructions",
+            "name": "instructions",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "format": "date-time",
+            "x-go-name": "PublishedAt",
+            "name": "publishedAt",
+            "in": "query"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful operation"
           },
           "400": {
             "description": "Invalid input"
-          }
-        }
-      }
-    },
-    "/recipes/search": {
-      "get": {
-        "description": "Search existing recipes by tag",
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "recipes"
-        ],
-        "operationId": "searchRecipe",
-        "parameters": [
-          {
-            "type": "string",
-            "description": "tag of the recipe",
-            "name": "tag",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation"
           }
         }
       }
@@ -130,9 +151,6 @@
         "responses": {
           "200": {
             "description": "Successful operation"
-          },
-          "400": {
-            "description": "Invalid input"
           },
           "404": {
             "description": "Invalid recipe ID"
