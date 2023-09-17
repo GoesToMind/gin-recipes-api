@@ -9,6 +9,7 @@
 //
 // Consumes:
 //   - application/json
+//
 // Produces:
 //   - application/json
 //
@@ -17,8 +18,10 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/GoesToMind/gin-recipes-api/handlers"
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -26,12 +29,10 @@ import (
 	"os"
 )
 
-
 var recipesHandler *handlers.RecipesHandler
 var ctx context.Context
 var err error
 var client *mongo.Client
-
 
 func init() {
 	ctx = context.Background()
@@ -41,9 +42,18 @@ func init() {
 	}
 	log.Println("Connected to MongoDB")
 	collection := client.Database(os.Getenv("MONGO_DATABASE")).Collection("recipes")
-	recipesHandler = handlers.NewRecipesHandler(ctx, collection)
-}
 
+	redisClient := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+	status := redisClient.Ping()
+	fmt.Println(status)
+
+	recipesHandler = handlers.NewRecipesHandler(ctx, collection, redisClient)
+
+}
 
 func main() {
 	router := gin.Default()
@@ -57,5 +67,3 @@ func main() {
 		return
 	}
 }
-
-
